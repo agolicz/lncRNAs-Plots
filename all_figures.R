@@ -4,7 +4,6 @@ library("cowplot")
 
 ####Figure 1 A-D####
 ####Transcript length####
-
 t<-read.csv("transcript.length",header=F,sep="\t")
 row.names(t)<-t$V3
 t$Length <-t$V2-t$V1+1
@@ -35,7 +34,6 @@ g2<-ggplot(df2,aes(x=Transcripts,y=n2,  fill=Gene_type))+geom_bar(position=posit
 ggsave("1B.pdf", width = 6, height = 6)
 
 ####Number of exons####
-
 t<-read.csv("exon.number",header=F,sep="\t")
 row.names(t)<-t$V2
 t.c<-t[grep("^NC",row.names(t), invert=TRUE),]
@@ -51,7 +49,6 @@ g3<-ggplot(df2,aes(x=Exons,y=n2,  fill=Gene_type))+geom_bar(position=position_do
 ggsave("1C.pdf", width = 6, height = 6)
 
 #####FPKM density plot#######################
-
 t<-read.csv("all.genes.fpkm",header=T, row.names=1,sep="\t")
 c<-as.vector(as.matrix(t[grep("^NC",row.names(t), invert=TRUE),]))
 nc<-as.vector(as.matrix(t[grep("^NC",row.names(t)),]))
@@ -63,7 +60,6 @@ ggsave("1D.pdf", width = 6, height = 6)
 
 ####Figure 1E####
 ####Circos#######
-
 library("OmicCircos")
 add.alpha <- function(col, alpha=1){
    if(missing(col))
@@ -102,7 +98,6 @@ dev.off()
 
 ####Figure 1F####
 ####TE fraction####
-
 t<-read.csv("TE.fraction",sep="\t",header=T)
 ggplot(t,aes(x=TE, y=Fraction, fill=Location))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Fraction")+xlab("Transposable Element")+theme_classic()+theme(legend.title=element_blank())+
 coord_flip()
@@ -170,7 +165,7 @@ ggplot(t,aes(x=Sample,y=Count,  fill=Type))+geom_bar(position=position_dodge(), 
 ggsave("3C.pdf", width = 6, height = 6)
 
 ####Figure 3D####
-####Heatmep####
+####Heatmap####
 #https://support.bioconductor.org/p/76250/
 require(gtools)
 require(RColorBrewer)
@@ -205,8 +200,7 @@ ggplot(t,aes(x=Place,y=R))+geom_violin(aes(fill=Type),alpha=0.75)+geom_boxplot(a
 ggsave("3E.pdf", width = 14, height = 6)
 
 ####Figure 4B and 4C####
-####EXPRESSION####
-
+####Expression####
 t<-read.csv("GWAS.linc.ncgenes.fixed.fpkm",sep="\t",header=T)
 t.s<-subset(t,GENE=="NC_GMAXST00018683")
 ch2<-data.frame(SAMPLE=t.s$SAMPLE, FPKM=t.s$FPKM)
@@ -233,7 +227,7 @@ pdf("4C.pdf", height=6, width=8)
 plot_grid(g3, g4, nrow=2, ncol=1)
 dev.off()
 
-####Supplemetary####
+####Supplementary####
 ####Fig S2####
 t<-read.csv("centromere.fpkm",sep="\t",header=T)
 g1<-ggplot(data=t, aes(x=SAMPLE, y=log1p(FPKM), group=GENE)) + geom_line(size=0.75, color="steelblue",alpha=0.2) + theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_x_discrete(expand=c(0,0))+theme(legend.title=element_blank())
@@ -246,7 +240,6 @@ dev.off()
 
 ####Fig S3A####
 ####Correlation coefficients####
-
 t<-read.csv("correlations.0.5percent",sep="\t",header=T)
 t2<-read.csv("correlations",sep="\t",header=T)
 codes<-c(rep("All", dim(t)[1]), rep("Significant", dim(t2)[1]))
@@ -265,7 +258,6 @@ plot_grid(g1, g2, labels=c("A", "B"), ncol = 2, nrow = 1)
 dev.off()
 
 ####Fig S5####
-
 t<-read.csv("GWAS.linc.ncgenes.fixed.fpkm",sep="\t",header=T)
 sub<-"Days-to-flowering"
 s<-subset(t, TYPE==sub)
@@ -294,4 +286,3 @@ g6<-ggplot(data=s, aes(x=SAMPLE, y=FPKM, group=GENE, colour=GENE)) + geom_line(s
 pdf("S5.pdf", height=12, width=20)
 plot_grid(g1, g2, g3, g4, g5, g6, ncol = 2, nrow = 3)
 dev.off()
-
