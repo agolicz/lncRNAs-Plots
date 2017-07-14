@@ -4,6 +4,7 @@ library("cowplot")
 
 ####Figure 1 A-D####
 ####Transcript length####
+
 t<-read.csv("transcript.length",header=F,sep="\t")
 row.names(t)<-t$V3
 t$Length <-t$V2-t$V1+1
@@ -11,9 +12,9 @@ t.c<-t[grep("^NC",row.names(t), invert=TRUE),]
 t.nc<-t[grep("^NC",row.names(t)),]
 codes<-c(rep("Coding", dim( t.c)[1]), rep("Non-coding", dim( t.nc)[1]))
 df<-data.frame("Length"=c(t.c$Length,t.nc$Length), "Gene_type"=codes)
-g1<-ggplot(df,aes(x=Length, fill=Gene_type))+geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+xlab("Transcript length [bp]")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+coord_cartesian(xlim=c(0, 10000))+theme_classic()+theme(legend.title=element_blank())
+g1<-ggplot(df,aes(x=Length, fill=Gene_type))+geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+xlab("Transcript length [bp]")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+coord_cartesian(xlim=c(0, 10000))+theme_classic()+theme(legend.title=element_blank())+theme(text = element_text(size=14))
 
-ggsave("1A.pdf", width = 6, height = 6)
+ggsave("1A.pdf", width = 5, height = 4)
 
 ####Trasncript number####
 require(plyr)
@@ -29,11 +30,12 @@ df$Transcripts[df$Transcripts > 10] <- 10
 df2<-rbind(data.frame(count(df,Gene_type,Transcripts)), c("Non-coding", 5, NA),  c("Non-coding", 6, NA), c("Non-coding", 7, NA), c("Non-coding", 8, NA), c("Non-coding", 9, NA), c("Non-coding", 10, NA))
 df2$n2<-as.numeric(df2$n)
 positions <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
-g2<-ggplot(df2,aes(x=Transcripts,y=n2,  fill=Gene_type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Transcript number")+theme_classic()+scale_x_discrete(limits = positions)+theme(legend.title=element_blank())
+g2<-ggplot(df2,aes(x=Transcripts,y=n2,  fill=Gene_type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Transcript number")+theme_classic()+scale_x_discrete(limits = positions)+theme(legend.title=element_blank())+theme(text = element_text(size=14))
 
-ggsave("1B.pdf", width = 6, height = 6)
+ggsave("1B.pdf", width = 5, height = 4)
 
 ####Number of exons####
+
 t<-read.csv("exon.number",header=F,sep="\t")
 row.names(t)<-t$V2
 t.c<-t[grep("^NC",row.names(t), invert=TRUE),]
@@ -44,22 +46,24 @@ df$Exons[df$Exons > 10] <- 10
 df2<-rbind(data.frame(count(df,Gene_type,Exons)), c("Non-coding", 5, NA),  c("Non-coding", 6, NA), c("Non-coding", 7, NA), c("Non-coding", 8, NA), c("Non-coding", 9, NA), c("Non-coding", 10, NA))
 df2$n2<-as.numeric(df2$n)
 positions <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
-g3<-ggplot(df2,aes(x=Exons,y=n2,  fill=Gene_type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Exon number")+theme_classic()+scale_x_discrete(limits = positions)+theme(legend.title=element_blank())
+g3<-ggplot(df2,aes(x=Exons,y=n2,  fill=Gene_type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Exon number")+theme_classic()+scale_x_discrete(limits = positions)+theme(legend.title=element_blank())+theme(text = element_text(size=14))
 
-ggsave("1C.pdf", width = 6, height = 6)
+ggsave("1C.pdf", width = 5, height = 4)
 
 #####FPKM density plot#######################
+
 t<-read.csv("all.genes.fpkm",header=T, row.names=1,sep="\t")
 c<-as.vector(as.matrix(t[grep("^NC",row.names(t), invert=TRUE),]))
 nc<-as.vector(as.matrix(t[grep("^NC",row.names(t)),]))
 codes<-c(rep("Coding", length(c)), rep("Non-coding", length(nc)))
 df<-data.frame("FPKM"=c(log2(c),log2(nc)), "Gene_type"=codes)
-g4<-ggplot(df,aes(x=FPKM, fill=Gene_type)) + geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())
+g4<-ggplot(df,aes(x=FPKM, fill=Gene_type)) + geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+theme(text = element_text(size=14))
 
-ggsave("1D.pdf", width = 6, height = 6)
+ggsave("1D.pdf", width = 5, height = 4)
 
 ####Figure 1E####
 ####Circos#######
+
 library("OmicCircos")
 add.alpha <- function(col, alpha=1){
    if(missing(col))
@@ -98,43 +102,44 @@ dev.off()
 
 ####Figure 1F####
 ####TE fraction####
+
 t<-read.csv("TE.fraction",sep="\t",header=T)
 ggplot(t,aes(x=TE, y=Fraction, fill=Location))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Fraction")+xlab("Transposable Element")+theme_classic()+theme(legend.title=element_blank())+
-coord_flip()
+coord_flip()+theme(text = element_text(size=14))
 
-ggsave("1F.pdf", width = 6, height = 6)
+ggsave("1F.pdf", width = 5, height = 4)
 
 ####Fig 2B####
 ####simulations####
 t<-read.csv("simulations.synteny", sep="\t",header=F)
 names(t)<-c("Type","Count","Significance")
-ggplot(t,aes(x=factor(Type), y=Count, color=factor(Type), shape=Significance)) + geom_point(alpha=0.75, size=4)+scale_color_brewer(palette="Accent")+ylab("Loci count")+xlab("Control dataset")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+ expand_limits(y = 1000)+geom_hline(yintercept = 1434)+annotate("text", 3.5, 1450, label = "Biological dataset = 1434")+scale_shape_manual(values=c(19, 17))
+ggplot(t,aes(x=factor(Type), y=Count, color=factor(Type), shape=Significance)) + geom_point(alpha=0.75, size=4)+scale_color_brewer(palette="Accent")+ylab("Loci count")+xlab("Control dataset")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+ expand_limits(y = 1000)+geom_hline(yintercept = 1434)+annotate("text", 3.0, 1416, label = "Biological dataset = 1434")+scale_shape_manual(values=c(19, 17))+theme(text = element_text(size=14))
 
-ggsave("2B.pdf", width = 6, height = 6)
+ggsave("2B.pdf", width = 5, height = 4)
 
 ####Fig 2C####
 ####simulations####
 t<-read.csv("simulations.homeology",sep="\t",header=F)
 names(t)<-c("Type","Count","Significance")
-ggplot(t,aes(x=factor(Type), y=Count, color=factor(Type), shape=Significance)) + geom_point(alpha=0.75, size=4)+scale_color_brewer(palette="Accent")+ylab("Loci count")+xlab("Control dataset")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+ expand_limits(y = 1000)+geom_hline(yintercept = 1826)+annotate("text", 3.5, 1810, label = "Biological dataset = 1826")+scale_shape_manual(values=c(17,19))
+ggplot(t,aes(x=factor(Type), y=Count, color=factor(Type), shape=Significance)) + geom_point(alpha=0.75, size=4)+scale_color_brewer(palette="Accent")+ylab("Loci count")+xlab("Control dataset")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+ expand_limits(y = 1000)+geom_hline(yintercept = 1826)+annotate("text", 3.0, 1800, label = "Biological dataset = 1826")+scale_shape_manual(values=c(17,19))+theme(text = element_text(size=14))
 
-ggsave("2C.pdf", width = 6, height = 6)
+ggsave("2C.pdf", width = 5, height = 4)
 
 ####Fig 2D####
 ####Ks density plot####
 t<-read.csv("ks.conserved.random",sep="\t",header=F)
 names(t)<-c("R","Type")
-ggplot(t,aes(x=R, fill=Type)) + geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+xlab("Ks value")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+coord_cartesian(xlim=c(0, 2))
+ggplot(t,aes(x=R, fill=Type)) + geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+xlab("Ks value")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+coord_cartesian(xlim=c(0, 2))+theme(text = element_text(size=14))
 
-ggsave("2D.pdf", width = 6, height = 6)
+ggsave("2D.pdf", width = 5, height = 4)
 
 ####Fig 2E####
 ####Violin plot####
 t<-read.csv("homeologous.ori.r",sep="\t",header=F)
 names(t)<-c("R","Type")
-ggplot(t,aes(x=Type,y=R))+geom_violin(aes(fill=Type),alpha=0.75)+geom_boxplot(aes(fill=Type),alpha=0.75, width=0.1)+scale_fill_brewer(palette="Accent")+ylab("Correlation coefficient")+xlab("")+theme_classic()+theme(legend.title=element_blank(), axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())
+ggplot(t,aes(x=Type,y=R))+geom_violin(aes(fill=Type),alpha=0.75)+geom_boxplot(aes(fill=Type),alpha=0.75, width=0.1)+scale_fill_brewer(palette="Accent")+ylab("Correlation coefficient")+xlab("")+theme_classic()+theme(legend.title=element_blank(), axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())+theme(text = element_text(size=14))
 
-ggsave("2E.pdf", width = 6, height = 6)
+ggsave("2E.pdf", width = 5, height = 4)
 
 ####Fig3A####
 ####Samples with expression#########
@@ -145,27 +150,27 @@ t.c<-t[grep("^NC",row.names(t), invert=TRUE),]
 t.nc<-t[grep("^NC",row.names(t)),]
 codes<-c(rep("Coding", dim(t.c)[1]), rep("Non-coding", dim(t.nc)[1]))
 df<-data.frame("Samples_with_expression"=c(t.c$Expression,t.nc$Expression), "Gene_type"=codes)
-ggplot(df,aes(x=Samples_with_expression, fill=Gene_type)) + geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+xlab("Samples with expression")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())
+ggplot(df,aes(x=Samples_with_expression, fill=Gene_type)) + geom_density(alpha=0.75)+scale_fill_brewer(palette="Accent")+ylab("Density")+xlab("Samples with expression")+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme_classic()+theme(legend.title=element_blank())+theme(text = element_text(size=14))
 
-ggsave("3A.pdf", width = 6, height = 6)
+ggsave("3A.pdf", width = 5, height = 4)
 
 ####Fig3B####
 ####Counts plot#####
 t<-read.csv("sample.expression",header=F,sep="\t")
 names(t)<-c("Sample", "Count","Type")
-ggplot(t,aes(x=Sample,y=Count,  fill=Type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Sample")+theme_classic()+theme(legend.title=element_blank())+coord_flip()
+ggplot(t,aes(x=Sample,y=Count,  fill=Type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Sample")+theme_classic()+theme(legend.title=element_blank())+coord_flip()+theme(text = element_text(size=14))
 
-ggsave("3B.pdf", width = 6, height = 6)
+ggsave("3B.pdf", width = 5, height = 5)
 
 ####Fig3C####
 ####Counts plot2####
 t<-read.csv("sample.merged.expression",header=F,sep="\t")
 names(t)<-c("Sample", "Count","Type")
-ggplot(t,aes(x=Sample,y=Count,  fill=Type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Sample")+theme_classic()+theme(legend.title=element_blank())+coord_flip()
-ggsave("3C.pdf", width = 6, height = 6)
+ggplot(t,aes(x=Sample,y=Count,  fill=Type))+geom_bar(position=position_dodge(), width=0.7, colour="black", stat="identity")+scale_fill_brewer(palette="Accent")+ylab("Count")+xlab("Sample")+theme_classic()+theme(legend.title=element_blank())+coord_flip()+theme(text = element_text(size=14))
+ggsave("3C.pdf", width = 5, height = 4)
 
 ####Figure 3D####
-####Heatmap####
+####Heatmep####
 #https://support.bioconductor.org/p/76250/
 require(gtools)
 require(RColorBrewer)
@@ -186,7 +191,7 @@ mat = mat[hc$order, hc$order]
 mat[lower.tri(mat)] = NA
 diag(mat) <- NA
 mat = mat[o, o]
-pdf("3D.pdf", height=8, width=8)
+pdf("3D.pdf", height=6, width=8)
 pheatmap(mat, show_colnames = T, cluster_col = hc, cluster_row = hc, treeheight_col=0)
 dev.off()
 
@@ -195,12 +200,13 @@ dev.off()
 ####Violin plot####
 t<-read.csv("specificity.tau", sep="\t",header=F)
 names(t)<-c("R","Type","Place")
-ggplot(t,aes(x=Place,y=R))+geom_violin(aes(fill=Type),alpha=0.75)+geom_boxplot(aes(fill=Type),alpha=0.75, width=0.1)+scale_fill_brewer(palette="Accent")+ylab("Correlation coefficient")+xlab("")+theme_classic()+theme(legend.title=element_blank(), axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())
+ggplot(t,aes(x=Place,y=R))+geom_violin(aes(fill=Type),alpha=0.75)+geom_boxplot(aes(fill=Type),alpha=0.75, width=0.1)+scale_fill_brewer(palette="Accent")+ylab("Correlation coefficient")+xlab("")+theme_classic()+theme(legend.title=element_blank(), axis.title.x=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank())+theme(text = element_text(size=14))
 
-ggsave("3E.pdf", width = 14, height = 6)
+ggsave("3E.pdf", width = 8, height = 5)
 
 ####Figure 4B and 4C####
-####Expression####
+####EXPRESSION####
+
 t<-read.csv("GWAS.linc.ncgenes.fixed.fpkm",sep="\t",header=T)
 t.s<-subset(t,GENE=="NC_GMAXST00018683")
 ch2<-data.frame(SAMPLE=t.s$SAMPLE, FPKM=t.s$FPKM)
@@ -227,7 +233,7 @@ pdf("4C.pdf", height=6, width=8)
 plot_grid(g3, g4, nrow=2, ncol=1)
 dev.off()
 
-####Supplementary####
+####Supplemetary####
 ####Fig S2####
 t<-read.csv("centromere.fpkm",sep="\t",header=T)
 g1<-ggplot(data=t, aes(x=SAMPLE, y=log1p(FPKM), group=GENE)) + geom_line(size=0.75, color="steelblue",alpha=0.2) + theme_classic()+theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_x_discrete(expand=c(0,0))+theme(legend.title=element_blank())
@@ -240,6 +246,7 @@ dev.off()
 
 ####Fig S3A####
 ####Correlation coefficients####
+
 t<-read.csv("correlations.0.5percent",sep="\t",header=T)
 t2<-read.csv("correlations",sep="\t",header=T)
 codes<-c(rep("All", dim(t)[1]), rep("Significant", dim(t2)[1]))
@@ -258,6 +265,7 @@ plot_grid(g1, g2, labels=c("A", "B"), ncol = 2, nrow = 1)
 dev.off()
 
 ####Fig S5####
+
 t<-read.csv("GWAS.linc.ncgenes.fixed.fpkm",sep="\t",header=T)
 sub<-"Days-to-flowering"
 s<-subset(t, TYPE==sub)
@@ -286,3 +294,4 @@ g6<-ggplot(data=s, aes(x=SAMPLE, y=FPKM, group=GENE, colour=GENE)) + geom_line(s
 pdf("S5.pdf", height=12, width=20)
 plot_grid(g1, g2, g3, g4, g5, g6, ncol = 2, nrow = 3)
 dev.off()
+
